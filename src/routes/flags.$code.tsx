@@ -30,8 +30,10 @@ export const Route = createFileRoute("/flags/$code")({
 });
 
 function CountryPage() {
-  const { country } = Route.useLoaderData();
+  const data = Route.useLoaderData() as { country: import("@/lib/countries").Country };
+  const { country } = data;
   const similar = similarCountries(country);
+
 
   const facts = [
     { l: "Столица", v: country.capital },
