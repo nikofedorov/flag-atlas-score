@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ScoreRouteImport } from './routes/score'
 import { Route as RulesRouteImport } from './routes/rules'
 import { Route as PrivacyRouteImport } from './routes/privacy'
@@ -24,6 +25,11 @@ import { Route as FlagsCodeRouteImport } from './routes/flags.$code'
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
   path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ScoreRoute = ScoreRouteImport.update({
@@ -87,6 +93,7 @@ export interface FileRoutesByFullPath {
   '/privacy': typeof PrivacyRoute
   '/rules': typeof RulesRoute
   '/score': typeof ScoreRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/flags/$code': typeof FlagsCodeRoute
 }
@@ -100,6 +107,7 @@ export interface FileRoutesByTo {
   '/privacy': typeof PrivacyRoute
   '/rules': typeof RulesRoute
   '/score': typeof ScoreRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/flags/$code': typeof FlagsCodeRoute
 }
@@ -114,6 +122,7 @@ export interface FileRoutesById {
   '/privacy': typeof PrivacyRoute
   '/rules': typeof RulesRoute
   '/score': typeof ScoreRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/flags/$code': typeof FlagsCodeRoute
 }
@@ -129,6 +138,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/rules'
     | '/score'
+    | '/sitemap.xml'
     | '/terms'
     | '/flags/$code'
   fileRoutesByTo: FileRoutesByTo
@@ -142,6 +152,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/rules'
     | '/score'
+    | '/sitemap.xml'
     | '/terms'
     | '/flags/$code'
   id:
@@ -155,6 +166,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/rules'
     | '/score'
+    | '/sitemap.xml'
     | '/terms'
     | '/flags/$code'
   fileRoutesById: FileRoutesById
@@ -169,6 +181,7 @@ export interface RootRouteChildren {
   PrivacyRoute: typeof PrivacyRoute
   RulesRoute: typeof RulesRoute
   ScoreRoute: typeof ScoreRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermsRoute: typeof TermsRoute
 }
 
@@ -179,6 +192,13 @@ declare module '@tanstack/react-router' {
       path: '/terms'
       fullPath: '/terms'
       preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/score': {
@@ -274,6 +294,7 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacyRoute: PrivacyRoute,
   RulesRoute: RulesRoute,
   ScoreRoute: ScoreRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermsRoute: TermsRoute,
 }
 export const routeTree = rootRouteImport
