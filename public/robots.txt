@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /full_rules
 
 Sitemap: https://www.flagman.games/sitemap.xml
