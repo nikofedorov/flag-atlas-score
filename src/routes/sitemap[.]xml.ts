@@ -11,10 +11,12 @@ export const Route = createFileRoute("/sitemap.xml")({
         const staticPaths = [
           "/", "/flags", "/score", "/rules", "/buy", "/about", "/contacts",
           "/terms", "/privacy", "/data-policy",
+          // NOTE: /full_rules intentionally excluded — noindex
         ];
-        const dynamic = countries.map((c) => `/flags/${c.code}`);
+        const dynamic = countries.map((c) => `/${c.slug ?? c.code}`);
         const urls = [...staticPaths, ...dynamic]
-          .map((p) => `  <url><loc>${BASE_URL}${p}</loc></url>`).join("\n");
+          .map((p) => `  <url><loc>${BASE_URL}${p}</loc></url>`)
+          .join("\n");
         const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls}

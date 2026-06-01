@@ -14,11 +14,13 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ScoreRouteImport } from './routes/score'
 import { Route as RulesRouteImport } from './routes/rules'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as Full_rulesRouteImport } from './routes/full_rules'
 import { Route as FlagsRouteImport } from './routes/flags'
 import { Route as DataPolicyRouteImport } from './routes/data-policy'
 import { Route as ContactsRouteImport } from './routes/contacts'
 import { Route as BuyRouteImport } from './routes/buy'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as SlugRouteImport } from './routes/$slug'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as FlagsCodeRouteImport } from './routes/flags.$code'
 
@@ -47,6 +49,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
   path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
+const Full_rulesRoute = Full_rulesRouteImport.update({
+  id: '/full_rules',
+  path: '/full_rules',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FlagsRoute = FlagsRouteImport.update({
   id: '/flags',
   path: '/flags',
@@ -72,6 +79,11 @@ const AboutRoute = AboutRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SlugRoute = SlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -85,11 +97,13 @@ const FlagsCodeRoute = FlagsCodeRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/$slug': typeof SlugRoute
   '/about': typeof AboutRoute
   '/buy': typeof BuyRoute
   '/contacts': typeof ContactsRoute
   '/data-policy': typeof DataPolicyRoute
   '/flags': typeof FlagsRouteWithChildren
+  '/full_rules': typeof Full_rulesRoute
   '/privacy': typeof PrivacyRoute
   '/rules': typeof RulesRoute
   '/score': typeof ScoreRoute
@@ -99,11 +113,13 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/$slug': typeof SlugRoute
   '/about': typeof AboutRoute
   '/buy': typeof BuyRoute
   '/contacts': typeof ContactsRoute
   '/data-policy': typeof DataPolicyRoute
   '/flags': typeof FlagsRouteWithChildren
+  '/full_rules': typeof Full_rulesRoute
   '/privacy': typeof PrivacyRoute
   '/rules': typeof RulesRoute
   '/score': typeof ScoreRoute
@@ -114,11 +130,13 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/$slug': typeof SlugRoute
   '/about': typeof AboutRoute
   '/buy': typeof BuyRoute
   '/contacts': typeof ContactsRoute
   '/data-policy': typeof DataPolicyRoute
   '/flags': typeof FlagsRouteWithChildren
+  '/full_rules': typeof Full_rulesRoute
   '/privacy': typeof PrivacyRoute
   '/rules': typeof RulesRoute
   '/score': typeof ScoreRoute
@@ -130,11 +148,13 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/$slug'
     | '/about'
     | '/buy'
     | '/contacts'
     | '/data-policy'
     | '/flags'
+    | '/full_rules'
     | '/privacy'
     | '/rules'
     | '/score'
@@ -144,11 +164,13 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/$slug'
     | '/about'
     | '/buy'
     | '/contacts'
     | '/data-policy'
     | '/flags'
+    | '/full_rules'
     | '/privacy'
     | '/rules'
     | '/score'
@@ -158,11 +180,13 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/$slug'
     | '/about'
     | '/buy'
     | '/contacts'
     | '/data-policy'
     | '/flags'
+    | '/full_rules'
     | '/privacy'
     | '/rules'
     | '/score'
@@ -173,11 +197,13 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  SlugRoute: typeof SlugRoute
   AboutRoute: typeof AboutRoute
   BuyRoute: typeof BuyRoute
   ContactsRoute: typeof ContactsRoute
   DataPolicyRoute: typeof DataPolicyRoute
   FlagsRoute: typeof FlagsRouteWithChildren
+  Full_rulesRoute: typeof Full_rulesRoute
   PrivacyRoute: typeof PrivacyRoute
   RulesRoute: typeof RulesRoute
   ScoreRoute: typeof ScoreRoute
@@ -222,6 +248,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/full_rules': {
+      id: '/full_rules'
+      path: '/full_rules'
+      fullPath: '/full_rules'
+      preLoaderRoute: typeof Full_rulesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/flags': {
       id: '/flags'
       path: '/flags'
@@ -257,6 +290,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/$slug': {
+      id: '/$slug'
+      path: '/$slug'
+      fullPath: '/$slug'
+      preLoaderRoute: typeof SlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -286,11 +326,13 @@ const FlagsRouteWithChildren = FlagsRoute._addFileChildren(FlagsRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  SlugRoute: SlugRoute,
   AboutRoute: AboutRoute,
   BuyRoute: BuyRoute,
   ContactsRoute: ContactsRoute,
   DataPolicyRoute: DataPolicyRoute,
   FlagsRoute: FlagsRouteWithChildren,
+  Full_rulesRoute: Full_rulesRoute,
   PrivacyRoute: PrivacyRoute,
   RulesRoute: RulesRoute,
   ScoreRoute: ScoreRoute,
@@ -300,13 +342,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
