@@ -16,7 +16,7 @@ export interface HistoricalFlag {
 
 export interface Country {
   code: string; // ISO 3166-1 alpha-2 lowercase
-  slug: string; // english slug, e.g. "germany"
+  slug?: string; // english slug, e.g. "germany" — injected at module init
   name: string;
   capital: string;
   population: string;
