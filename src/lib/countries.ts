@@ -332,8 +332,61 @@ export const continents: Continent[] = [
 export const flagUrl = (code: string, size: 80 | 160 | 320 | 640 = 320) =>
   `https://flagcdn.com/w${size}/${code}.png`;
 
-export function getCountry(code: string) {
-  return countries.find((c) => c.code === code);
+// --- Slug + extended metadata maps ---------------------------------------
+const slugByCode: Record<string, string> = {
+  ru: "russia", us: "usa", jp: "japan", de: "germany", fr: "france",
+  gb: "united-kingdom", it: "italy", es: "spain", br: "brazil", cn: "china",
+  in: "india", au: "australia", ca: "canada", za: "south-africa",
+  ar: "argentina", mx: "mexico", eg: "egypt", tr: "turkey", kr: "south-korea",
+  ch: "switzerland",
+};
+
+interface CountryExtra {
+  phoneCode?: string;
+  government?: string;
+  religions?: string;
+  foundedDate?: string;
+  historyShort?: string;
+}
+
+const extraByCode: Record<string, CountryExtra> = {
+  ru: { phoneCode: "+7", government: "Федеративная президентско-парламентская республика", religions: "Православие, ислам, буддизм", foundedDate: "12 июня 1990 (декларация о суверенитете)", historyShort: "Исторические корни — Киевская Русь IX века. Российская империя (1721–1917), СССР (1922–1991), современная Российская Федерация — с 1991 года." },
+  us: { phoneCode: "+1", government: "Федеративная президентская республика", religions: "Христианство (преимущественно протестантизм)", foundedDate: "4 июля 1776", historyShort: "Колонии получили независимость от Великобритании в 1776 году. Конституция 1787 года заложила основу современного государства." },
+  jp: { phoneCode: "+81", government: "Конституционная монархия (парламентская)", religions: "Синтоизм, буддизм", foundedDate: "660 до н. э. (легендарная)", historyShort: "Япония — старейшая непрерывно существующая монархия. После реставрации Мэйдзи (1868) — быстрая модернизация." },
+  de: { phoneCode: "+49", government: "Федеративная парламентская республика", religions: "Христианство (католики, протестанты)", foundedDate: "3 октября 1990 (объединение)", historyShort: "Объединена в 1871 году Бисмарком. После Второй мировой разделена; воссоединена в 1990." },
+  fr: { phoneCode: "+33", government: "Полупрезидентская республика", religions: "Католицизм, ислам", foundedDate: "843 (Верденский договор)", historyShort: "Корни — Западно-Франкское королевство. Великая французская революция (1789) сформировала современную нацию." },
+  gb: { phoneCode: "+44", government: "Парламентская конституционная монархия", religions: "Англиканство, католицизм, ислам", foundedDate: "1 января 1801 (Акт об унии)", historyShort: "Образована из союза Англии, Шотландии (1707) и Ирландии (1801). Крупнейшая колониальная империя в истории." },
+  it: { phoneCode: "+39", government: "Парламентская республика", religions: "Католицизм", foundedDate: "17 марта 1861 (объединение)", historyShort: "Наследница Римской империи. Объединена в 1861 году в результате Рисорджименто." },
+  es: { phoneCode: "+34", government: "Парламентская конституционная монархия", religions: "Католицизм", foundedDate: "1469 (династический союз)", historyShort: "Образована браком Изабеллы Кастильской и Фердинанда Арагонского. В XVI веке — крупнейшая колониальная империя." },
+  br: { phoneCode: "+55", government: "Федеративная президентская республика", religions: "Католицизм, протестантизм", foundedDate: "7 сентября 1822", historyShort: "Бывшая португальская колония. Получила независимость в 1822, стала республикой в 1889." },
+  cn: { phoneCode: "+86", government: "Социалистическая однопартийная республика", religions: "Буддизм, даосизм, ислам", foundedDate: "1 октября 1949 (КНР)", historyShort: "Одна из древнейших цивилизаций — более 5000 лет. КНР провозглашена в 1949 году после гражданской войны." },
+  in: { phoneCode: "+91", government: "Федеративная парламентская республика", religions: "Индуизм, ислам, христианство, сикхизм", foundedDate: "15 августа 1947", historyShort: "Получила независимость от Великобритании в 1947 году. Крупнейшая демократия мира." },
+  au: { phoneCode: "+61", government: "Федеративная парламентская конституционная монархия", religions: "Христианство", foundedDate: "1 января 1901 (Федерация)", historyShort: "Британская колония с 1788 года, федерация шести колоний образована в 1901 году." },
+  ca: { phoneCode: "+1", government: "Федеративная парламентская конституционная монархия", religions: "Христианство", foundedDate: "1 июля 1867", historyShort: "Образована Актом о Британской Северной Америке. Полная конституционная независимость — 1982." },
+  za: { phoneCode: "+27", government: "Парламентская республика", religions: "Христианство, традиционные верования", foundedDate: "31 мая 1910 (Союз)", historyShort: "Союз ЮАС образован в 1910. Эпоха апартеида (1948–1994) завершилась с приходом Нельсона Манделы." },
+  ar: { phoneCode: "+54", government: "Федеративная президентская республика", religions: "Католицизм", foundedDate: "9 июля 1816", historyShort: "Получила независимость от Испании в 1816 году в ходе войн за независимость испанской Америки." },
+  mx: { phoneCode: "+52", government: "Федеративная президентская республика", religions: "Католицизм", foundedDate: "27 сентября 1821", historyShort: "Бывшая колония Новая Испания. Получила независимость в 1821 году." },
+  eg: { phoneCode: "+20", government: "Президентская республика", religions: "Ислам (суннизм), христианство (копты)", foundedDate: "28 февраля 1922", historyShort: "Древнейшая цивилизация — более 5000 лет. Современный Египет получил независимость от Великобритании в 1922." },
+  tr: { phoneCode: "+90", government: "Президентская республика", religions: "Ислам (суннизм)", foundedDate: "29 октября 1923", historyShort: "Турецкая Республика провозглашена Мустафой Кемалем Ататюрком в 1923 году после распада Османской империи." },
+  kr: { phoneCode: "+82", government: "Президентская республика", religions: "Без религии, христианство, буддизм", foundedDate: "15 августа 1948", historyShort: "Образована после освобождения от японского колониального правления (1910–1945) и разделения Кореи." },
+  ch: { phoneCode: "+41", government: "Федеративная полупрямая демократия", religions: "Католицизм, протестантизм", foundedDate: "1 августа 1291 (Союзная грамота)", historyShort: "Швейцарская Конфедерация образована в 1291 году. Современная федерация — с конституции 1848 года." },
+};
+
+// Inject slug + extended fields into the exported countries array.
+countries.forEach((c) => {
+  c.slug = slugByCode[c.code] ?? c.code;
+  const extra = extraByCode[c.code];
+  if (extra) Object.assign(c, extra);
+});
+
+export function getCountry(codeOrSlug: string) {
+  const v = codeOrSlug.toLowerCase();
+  return countries.find((c) => c.code === v || c.slug === v);
+}
+
+export function getCountryBySlug(slug: string) {
+  const v = slug.toLowerCase();
+  return countries.find((c) => c.slug === v);
 }
 
 export function similarCountries(country: Country, limit = 4) {
@@ -341,3 +394,4 @@ export function similarCountries(country: Country, limit = 4) {
     .filter((c) => c.code !== country.code && c.continent === country.continent)
     .slice(0, limit);
 }
+
