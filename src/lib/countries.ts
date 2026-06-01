@@ -10,10 +10,13 @@ export interface HistoricalFlag {
   years: string;
   image: string;
   description: string;
+  adoptedDate?: string;
+  differences?: string;
 }
 
 export interface Country {
   code: string; // ISO 3166-1 alpha-2 lowercase
+  slug: string; // english slug, e.g. "germany"
   name: string;
   capital: string;
   population: string;
@@ -28,6 +31,12 @@ export interface Country {
   history: string;
   previousFlags: HistoricalFlag[];
   facts: string[];
+  // Extended (optional)
+  phoneCode?: string;
+  government?: string;
+  religions?: string;
+  foundedDate?: string;
+  historyShort?: string;
 }
 
 const f = (code: string) => `https://flagcdn.com/w640/${code}.png`;
