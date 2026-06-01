@@ -104,8 +104,8 @@ function FlagsPage() {
           {filtered.map((c) => (
             <Link
               key={c.code}
-              to="/flags/$code"
-              params={{ code: c.code }}
+              to="/$slug"
+              params={{ slug: c.slug ?? c.code }}
               className="group overflow-hidden rounded-xl border border-border bg-card shadow-card transition hover:-translate-y-1 hover:shadow-elevated"
             >
               <div className="aspect-[4/3] overflow-hidden bg-secondary">
